@@ -1,0 +1,188 @@
+@media(max-width:1024px)
+{
+    .team .team-name h4 img
+    {
+        width: 25px;
+        margin-right: 0px;
+    }
+    .league-duration form .form-group {
+        width: 48.6%;
+    }
+    .league-duration form
+    {
+        height: 260px;
+    }
+}
+@media(max-width:768px)
+{
+    .fpl-configuration .col-lg-2 , .fpl-configuration .col-sm-3
+    {
+        width: 37%;
+    }
+    h3.random
+    {
+        padding-right: 10%;
+    }
+    .team .col-lg-1
+     {
+        display: none;
+     }
+     .league-duration.League-details form
+     {
+        height: auto;
+     }
+     .league-duration form .form-group {
+        width: 100%;
+        float: none;
+        margin-right: 0;
+    }
+    .league-duration form {
+        height: auto;
+        padding: 30px 10px 30px 10px;
+    }
+     .league-name-box .container ,.Draft-room .container, .all-player
+     {
+        width: auto;
+     }
+     .all-player .all-box .selected-player h4 img {
+        width: 25px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+}
+@media(max-width:414px)
+{
+    .fpl-configuration .col-lg-2, .fpl-configuration .col-sm-3 {
+        width: 100%;
+    }
+    .fpl-configuration h2,.fpl-configuration #field1,.fpl-configuration select,.fpl-configuration .input-group,.fpl-configuration .btn-primary
+    {
+        margin-left: 0px;
+    }
+    .fpl-configuration ul{margin-left: 20px;}
+    .draft-team-name
+    {
+        width: 30%;
+    }
+    .your-team .input-group
+    {
+        float: left;
+        width: 215px;
+    }
+    .next-turn-box {
+        width: 43px;
+        height: 43px;
+    }
+    .league-duration form
+    {
+        padding: 20px 10px 20px 10px;
+    }
+    .draft-team-name p
+    {
+        margin-bottom: 0;
+        font-size: 15px;
+    }
+    .draft-box
+    {
+        width: 30%;
+        height: 90px;
+        margin-right: 12.8px;
+    }
+    .draft-box h4
+    {
+        font-size: 17px;
+    }
+    .league-name p
+    {
+        padding-right: 0;
+        font-size: 14px;
+    }
+    .league-name .container
+    {
+        padding: 20px 20px 50px 20px;
+    }
+    .top-heading h1, .league-name h2
+    {
+        font-size: 20px;
+    }
+    .league-name .media h3 {
+        font-size: 50px;
+    }
+    .league-name .media .media-body
+    {
+        margin-top: 10px;
+    }
+    .league-name .media .media-body h5,.league-name .media .media-body span
+    {
+        font-size: 15px;
+    }
+    .league-name .container .col-sm-3
+    {
+        width: 50%;
+        float: left;
+    }
+    .league-name-box .text-right
+    {
+        text-align: left!important;
+        margin: 20px 0;
+    }
+    .league-name-box .input-group .datetimepicker, .league-name-box .input-group,.league-name-box .input-group span.input-group-addon
+    {
+        height: auto;
+    }
+    .league-name-box .input-group span.input-group-addon
+    {
+        padding-top: 6%;
+    }
+    .league-name-box .input-group h3
+    {
+        margin-top: 25px;
+    }
+    .league-name-box .input-group
+    {
+        width: 230px;
+    }
+    .league-name-box .btn-outline-primary
+    {
+        padding: 10px 20px;
+    }
+    .team .col-md-4{width: 50%;float: left;}
+    .team .selected-player
+    {
+        margin-bottom: 30px;
+    }
+    .all-player
+    {
+        margin: 0px 0 20px 0;
+    }
+    .all-player .all-box
+    {
+        margin-top: 20px;
+    }
+    .all-player table thead tr th
+    {
+        padding: 5px 10px 5px 10px;
+    }
+    .all-player-box
+    {
+        padding: 20px;
+    }
+    .draft-box
+    {
+        width: 29%;
+    }
+
+}
+
+@media(max-width:375px)
+{
+    h3.random {
+        padding-right: 0;
+    }
+}
+@media (max-width: 320px)
+{
+.draft-box {
+    width: 45.59%;
+}
+}
