@@ -340,7 +340,14 @@ class MainController extends Controller
             
         }
 
+        public function getUserStatus($userId, $leagueId)
+        {
 
+            $result_timer = DB::table('draft_league')->where('user_id', $userId)->where('league_id', $leagueId)->get();
+            $ch_status =  $result_timer[0]->choose_status;
+            $ac_status =  $result_timer[0]->active_status;
+            return ["choose_status" => $ch_status, "active_status" => (int)$ac_status];
+        }
         
 
         

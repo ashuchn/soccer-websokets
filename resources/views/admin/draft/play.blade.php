@@ -168,6 +168,13 @@
 
 </div>
 </div>
+<script>
+  let choose_status = {{ $ch_status }};
+  let active_status = {{ $ac_status }};
+  //getUserStatus('{{ session('userId') }}' , '{{ $draft_league_id }}');
+  
+</script>
+
 <!-- </body> -->
 <script>
     // var auto_refresh = setInterval(
@@ -184,6 +191,28 @@ $random_player = DB::table('players')->where('active', 0)->limit(1)->get('id');
 $loggedInUser = session('userId');
 ?>
 
+
+<script>
+  function getUserStatus(userId,leagueId) {
+    //let url = "{{ url('getUserStatus') }}" +"/userId/" + userId +"/leagueId/" + leagueId;
+    //console.log(url);
+    $.ajax({
+        url: "{{ url('getUserStatus') }}" +"/userId/" + userId +"/leagueId/" + leagueId,
+        dataType: "json",
+        type: "GET",
+        data: { leagueId : leagueId, userId : userId},
+        success: function (result) {
+          choose_status = result.choose_status;
+          active_status = result.active_status;
+          console.log("get user status result:")
+          console.log(choose_status);
+          console.log(active_status);
+        }
+    }); 
+  }
+
+</script>
+
 <script>
 function player_select(draftId, playerId, leagueId) {
     $.ajax({
@@ -193,6 +222,7 @@ function player_select(draftId, playerId, leagueId) {
         
         data: { leagueId : leagueId, playerId : playerId, draftId : draftId},
         success: function (result) {
+          {{--getUserStatus('{{ session('userId') }}' , '{{ $leagueId}}'); --}}
           playPartial();
           timer();
         }
@@ -207,7 +237,7 @@ function player_select(draftId, playerId, leagueId) {
         type: "GET",
         //data: { leagueId : leagueId, playerId : playerId, draftId : draftId},
         success: function (result) {
-          //let started = true;
+           {{--getUserStatus('{{ session('userId') }}' , '{{ $leagueId}}');--}}
           playPartial();
           timer();
         }
@@ -227,11 +257,12 @@ function player_select(draftId, playerId, leagueId) {
       fontColor   : '#FFFFFF',
       autostart   : false,
       onComplete  : function () {  
-            /*<?php if($ch_status == $ac_status) { ?>
-              timer();
-            <?php }else { ?>
-              player_select('{{ $draftId }}', '{{ $random_player[0]->id }}', '{{ $draft_league_id }}') 
-            <?php } ?>*/
+            // if(active_status == choose_status) {
+            //   // timer();
+            //   //do nothing
+            // } else {
+            //   player_select('{{ $draftId }}', '{{ $random_player[0]->id }}', '{{ $leagueId }}')
+            // }
         }
   });
     countdown.start();
@@ -258,14 +289,14 @@ function player_select(draftId, playerId, leagueId) {
   //use dispatch
   // Bind a function to a Event (the full Laravel class)
   channel.bind('App\\Events\\resetTimer', (data) => {
-    console.log(data);
+    getUserStatus({{ session('userId') }}, {{ $leagueId }});
     playPartial();
     timer();
   });
 
-//   channel.bind('pusher:subscription_succeeded', function(members) {
-//     // alert('successfully subscribed!');
-//  });
+  channel.bind('pusher:subscription_succeeded', function(members) {
+    // alert('successfully subscribed!');
+ });
 
 
 
