@@ -284,12 +284,15 @@ function player_select(draftId, playerId, leagueId) {
   Pusher.logToConsole = true;
   // Subscribe to the channel we specified in our Laravel Event
   // var channel = pusher.subscribe('timer-reset{{ $draft_league_id }}');
-  var channel = pusher.subscribe('timer-reset');
+  var leagueId =  {{ $leagueId }};
+  var channel = pusher.subscribe('timer-reset'+leagueId);
 
   //use dispatch
   // Bind a function to a Event (the full Laravel class)
   channel.bind('App\\Events\\resetTimer', (data) => {
-    getUserStatus({{ session('userId') }}, {{ $leagueId }});
+    //getUserStatus({{ session('userId') }}, {{ $leagueId }});
+    console.log("websocket data is :");
+    console.log(data);
     playPartial();
     timer();
   });

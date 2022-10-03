@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\League;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -19,11 +20,11 @@ class resetTimer implements ShouldBroadcast
      *
      * @return void
      */
-    // public $leagueId;
+    public $leagueId;
 
-    public function __construct()
+    public function __construct($leagueId)
     {
-        $this->leagueId = "test";
+        $this->leagueId = $leagueId;
     }
 
     /**
@@ -35,7 +36,7 @@ class resetTimer implements ShouldBroadcast
     public function broadcastOn()
     {
         //channel name
-        return new Channel('timer-reset');
+        return new PrivateChannel('timer-reset'.$this->leagueId);
         // return new Channel('timer-reset{$this->leagueId}');
         // return ['timer-reset'];
     }
