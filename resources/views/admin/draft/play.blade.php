@@ -66,36 +66,15 @@
             <button type="button" class="btn btn-outline-primary" onclick="return startDraft('{{$draftId}}', '{{ $league[0]->id }}')">Start</button>
             
         </div>
-     <!-- <div id="timer_div">
-          
-      </div> -->
-	  
-	  <input type="hidden" id="tsr" value="<?php echo $timer; ?>">
-	<input type="hidden" id="leagueID" value="<?php echo $draft_league_id; ?>">
-	
-	
-	  
-	  <div class="col-lg-3 col-md-3 col-sm-12" id="" style="<?php if($ch_status == $ac_status){echo 'display:none;';} ?>" >
-              <div class="input-group" id="">
-                      <!--<h3>Time per pick</h3>-->
-                      <div class="timer">
-                       <span class="seconds" id="countdown"><?php echo $timer; ?></span>
-                      </div>
-                      <audio id="timer-beep">
-                        <source src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/41203/beep.mp3"/>
-                        <source src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/41203/beep.ogg" />
-                      </audio>
-                  </span>
-                  </div>
-              </div>
-        
-</div>
+
+
 </section>
 
 
 
-<div id="main-draft-board">
 
+<div id="main-draft-board">
+<!-- here player list is loaded dynamically -->
 
 </div>
 
@@ -193,23 +172,23 @@ $loggedInUser = session('userId');
 
 
 <script>
-  function getUserStatus(userId,leagueId) {
-    //let url = "{{ url('getUserStatus') }}" +"/userId/" + userId +"/leagueId/" + leagueId;
-    //console.log(url);
-    $.ajax({
-        url: "{{ url('getUserStatus') }}" +"/userId/" + userId +"/leagueId/" + leagueId,
-        dataType: "json",
-        type: "GET",
-        data: { leagueId : leagueId, userId : userId},
-        success: function (result) {
-          choose_status = result.choose_status;
-          active_status = result.active_status;
-          console.log("get user status result:")
-          console.log(choose_status);
-          console.log(active_status);
-        }
-    }); 
-  }
+//   function getUserStatus(userId,leagueId) {
+//     //let url = "{{ url('getUserStatus') }}" +"/userId/" + userId +"/leagueId/" + leagueId;
+//     //console.log(url);
+//     $.ajax({
+//         url: "{{ url('getUserStatus') }}" +"/userId/" + userId +"/leagueId/" + leagueId,
+//         dataType: "json",
+//         type: "GET",
+//         data: { leagueId : leagueId, userId : userId},
+//         success: function (result) {
+//           choose_status = result.choose_status;
+//           active_status = result.active_status;
+//           console.log("get user status result:")
+//           console.log(choose_status);
+//           console.log(active_status);
+//         }
+//     }); 
+//   }
 
 </script>
 
@@ -244,6 +223,23 @@ function player_select(draftId, playerId, leagueId) {
     }); 
   }
 
+
+  function autoPlayerPick(draftId, leagueId, userId) {
+      console.log("url is "+"{{ url('autoPickPlayer') }}" + "/league/" + leagueId + "/draft/" + draftId +"/user/"+ userId);
+    $.ajax({
+        url: "{{ url('autoPickPlayer') }}" + "/league/" + leagueId + "/draft/" + draftId +"/user/"+ userId,
+        dataType: "json",
+        type: "GET",
+        data: { leagueId : leagueId, userId : userId, draftId : draftId },
+        success: function (result) {
+            // console.log('timer result is '+ result);
+            //console.log(result);
+            playPartial();
+            timer();
+        }
+    });
+}
+
 </script>
 
 
@@ -263,13 +259,14 @@ function player_select(draftId, playerId, leagueId) {
             // } else {
             //   player_select('{{ $draftId }}', '{{ $random_player[0]->id }}', '{{ $leagueId }}')
             // }
+            console.log("timer ended vroo");
+            autoPlayerPick('{{ $draftId }}', '{{ $leagueId }}', '{{ $loggedInUser }}');
+            // playPartial();
+            timer();
         }
   });
     countdown.start();
   }
-  // if(started == true){
-    // timer();
-  // }
 
 </script>
 
@@ -277,28 +274,26 @@ function player_select(draftId, playerId, leagueId) {
 
 <script type="text/javascript">
 
-  var pusher = new Pusher('2aa961ec7946f358e8e8', {
-    cluster: 'ap2',
-    encrypted: true
-  });
-  Pusher.logToConsole = true;
-  // Subscribe to the channel we specified in our Laravel Event
-  // var channel = pusher.subscribe('timer-reset{{ $draft_league_id }}');
-  var channel = pusher.subscribe('timer-reset');
+      var pusher = new Pusher('2aa961ec7946f358e8e8', {
+        cluster: 'ap2',
+        encrypted: true
+      });
+      Pusher.logToConsole = true;
+      // Subscribe to the channel we specified in our Laravel Event
+      // var channel = pusher.subscribe('timer-reset{{ $draft_league_id }}');
+      var channel = pusher.subscribe('timer-reset');
 
-  //use dispatch
-  // Bind a function to a Event (the full Laravel class)
-  channel.bind('App\\Events\\resetTimer', (data) => {
-    getUserStatus({{ session('userId') }}, {{ $leagueId }});
-    playPartial();
-    timer();
-  });
+      //use dispatch
+      // Bind a function to a Event (the full Laravel class)
+      channel.bind('App\\Events\\resetTimer', (data) => {
+        //getUserStatus({{ session('userId') }}, {{ $leagueId }});
+        playPartial();
+        timer();
+      });
 
-  channel.bind('pusher:subscription_succeeded', function(members) {
-    // alert('successfully subscribed!');
- });
-
-
+      channel.bind('pusher:subscription_succeeded', function(members) {
+        // alert('successfully subscribed!');
+    });
 
 </script>
 

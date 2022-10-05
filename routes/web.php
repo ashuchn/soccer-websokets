@@ -62,7 +62,7 @@ Route::group(['middleware' => ['checkuser']],function(){
 
     Route::post('update-league-timer', [MainController::class, 'update_league_timer'])->name('update-league-timer');
 
-    Route::get('getUserStatus/userId/{userId}/leagueId/{leagueId}', [MainController::class, 'getUserStatus'])->name('getUserStatus');
+    Route::get('autoPickPlayer/league/{leagueId}/draft/{draftId}/user/{userId}', [MainController::class, 'autoPlayerPick'])->name('autoPlayerPick');
 });
 
 

@@ -290,7 +290,8 @@ class MainController extends Controller
 
             /** returns teams in a league */
             $teamCount = DB::table('draft_league')->where('league_id', $leagueId)->count(); 
-
+            
+            event(new \App\Events\resetTimer());
             return view('admin.draft.dashboard',[
                 // 'userId' => $userId,
                 'teamId' => $teamId,
@@ -340,14 +341,153 @@ class MainController extends Controller
             
         }
 
-        public function getUserStatus($userId, $leagueId)
-        {
+        // public function autoPlayerPick($draftId, $leagueId, $userId)
+        // {
+        //     return [$leagueId,$draftId,$userId];
+        //     $chanceDecider = DB::table('draft_league')->where('user_id', $userId)->where('league_id', $leagueId)->get();
+        //     $ch_status =  $result_timer[0]->choose_status;
+        //     $ac_status =  $result_timer[0]->active_status;
 
-            $result_timer = DB::table('draft_league')->where('user_id', $userId)->where('league_id', $leagueId)->get();
-            $ch_status =  $result_timer[0]->choose_status;
-            $ac_status =  $result_timer[0]->active_status;
-            return ["choose_status" => $ch_status, "active_status" => (int)$ac_status];
+        //     if($ch_status != $ac_status ){
+        //         DB::table('draft_league')->where('id',$result1_id)->update(array('active_status'=>'1'));
+                    
+        //         DB::table('draft_player_selection')->insert([
+        //             "leagueId" => $leagueId,
+        //             //"teamId" => $teamId,
+        //             "teamId" => "1",
+        //             "playerId" => $playerId,
+        //             "userId" => session('userId')
+        //         ]);
+    
+        //         DB::table('players')->where('id', $playerId)->update([
+        //             "active" => 1
+        //         ]);
+                        
+        //         DB::table('draft_league')->where('league_id',$leagueId)->update(
+        //         array('choose_status'=>'0','active_status'=>'0'));
+        //     }
+
+        // }  
+
+        public function getRandomPlayer()
+        {
+            $player = DB::table('players')->where('active', 0)->inRandomOrder()->get('id');
+            return $player[0]->id;
         }
+
+        public function autoPlayerPick($leagueId,$draftId, $userId)
+        {
+            // return response()->json([
+            //     "draftId" => $draftId,
+            //     "leagueId" => $leagueId,
+            //     "userId" => $userId
+            // ]);
+            $chanceDecider = DB::table('draft_league')->where('user_id', $userId)->where('league_id', $leagueId)->get();
+            // return $chanceDecider;
+            $ch_status =  $chanceDecider[0]->choose_status;
+            $ac_status =  $chanceDecider[0]->active_status;
+
+            $count = DB::table('draft_league')->where('league_id',$leagueId)->where('choose_status','0')->count('id');
+            $round = DB::table('draft_league')->where('league_id',$leagueId)->get();
+            $round_val =  $round[0]->round_val;
+
+            if($ch_status != $ac_status ) {
+                // return "inside 1";
+                $playerId = $this->getRandomPlayer();
+                // return $playerId;
+               
+                // exit();
+                
+                if($count == 0) {
+                    // return "inside 2";
+                        $round = DB::table('draft_league')->where('league_id',$leagueId)->get();
+                        $round_val =  $round[0]->round_val;
+                        $total_round_val = $round_val + 1;
+                        //exit();
+    
+                        DB::table('draft_league')->where('league_id',$leagueId)->update(
+                        array('round_val'=>$total_round_val));
+    
+                        $round = DB::table('draft_league')->where('league_id',$leagueId)->get();
+                        $round_val =  $round[0]->round_val;
+                        //exit();
+                            
+                                
+                        $result1 = DB::table('draft_league')->where('draft_id',$draftId)->get();
+                        $result1_id =  $result1[0]->id;
+                        
+                        DB::table('draft_league')->where('id',$result1_id)->update(
+                            array('active_status'=>'1'));
+                    
+                        DB::table('draft_player_selection')->insert([
+                            "leagueId" => $leagueId,
+                            //"teamId" => $teamId,
+                            "teamId" => "1",
+                            "playerId" => $playerId,
+                            "userId" => $userId
+                        ]);
+    
+                        DB::table('players')->where('id', $playerId)->update([
+                            "active" => 1
+                        ]);
+                        
+                        DB::table('draft_league')->where('league_id',$leagueId)->update(
+                        array('choose_status'=>'0','active_status'=>'0'));
+                            
+                            
+                        if($round_val % 2 != 0) {
+                            $result2 = DB::table('draft_league')->where('league_id',$leagueId)->where('choose_status',0)->orderBy('id','desc')->limit(1)->get();
+                        } else {
+                            $result2 = DB::table('draft_league')->where('league_id',$leagueId)->where('choose_status',0)->orderBy('id','asc')->limit(1)->get();
+                        }
+                        
+                        $choose_id =  $result2[0]->id;
+                        DB::table('draft_league')->where('id',$choose_id)->update(
+                            array('choose_status'=>'1'));
+                            
+                            event(new \App\Events\resetTimer());
+                            return "count is zero";
+                }
+                    // return "inside 3";
+                        $result1 = DB::table('draft_league')->where('draft_id',$draftId)->get();
+                        $result1_id =  $result1[0]->id;
+                    
+                        DB::table('draft_league')->where('id',$result1_id)->update(
+                            array('active_status'=>'1'));
+                    
+    
+                
+                            if($round_val % 2 != 0) {
+                                $result2 = DB::table('draft_league')->where('league_id',$leagueId)->where('choose_status',0)->orderBy('id','desc')->limit(1)->get();
+                            } else {
+                                $result2 = DB::table('draft_league')->where('league_id',$leagueId)->where('choose_status',0)->orderBy('id','asc')->limit(1)->get();
+                            }
+                    
+                            $choose_id =  $result2[0]->id;
+    
+                            DB::table('draft_league')->where('id',$choose_id)->update(
+                                array('choose_status'=>'1'));
+                    
+                            DB::table('draft_player_selection')->insert([
+                                "leagueId" => $leagueId,
+                                //"teamId" => $teamId,
+                                "teamId" => "1",
+                                "playerId" => $playerId,
+                                "userId" => $userId
+                            ]);
+    
+                            DB::table('players')->where('id', $playerId)->update([
+                                "active" => 1
+                            ]);
+                            event(new \App\Events\resetTimer());
+                return "player added";
+            } else {
+                return "inside autoPlayerPick controller";
+            }
+            
+            
+        }
+        
         
 
         
@@ -416,20 +556,20 @@ class MainController extends Controller
                     ]);
                     
                         DB::table('draft_league')->where('league_id',$leagueId)->update(
-                        array('choose_status'=>'0','active_status'=>'0'));
+                            array('choose_status'=>'0','active_status'=>'0'));
                         
                         /*DB::table('draft_league')->where('league_id',$leagueId)->update(
                         array('round_val'=>'1'));*/
                         
                         
                             if($round_val % 2 != 0){
-                        $result2 = DB::table('draft_league')->where('league_id',$leagueId)->where('choose_status',0)->orderBy('id','desc')->limit(1)->get();
+                            $result2 = DB::table('draft_league')->where('league_id',$leagueId)->where('choose_status',0)->orderBy('id','desc')->limit(1)->get();
                         }else{
-                        $result2 = DB::table('draft_league')->where('league_id',$leagueId)->where('choose_status',0)->orderBy('id','asc')->limit(1)->get();
+                            $result2 = DB::table('draft_league')->where('league_id',$leagueId)->where('choose_status',0)->orderBy('id','asc')->limit(1)->get();
                         }
                         
                         
-                        echo $choose_id =  $result2[0]->id;
+                        $choose_id =  $result2[0]->id;
                         //exit();
                         
                         DB::table('draft_league')->where('id',$choose_id)->update(
