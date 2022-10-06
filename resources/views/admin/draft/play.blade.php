@@ -253,16 +253,9 @@ function player_select(draftId, playerId, leagueId) {
       fontColor   : '#FFFFFF',
       autostart   : false,
       onComplete  : function () {  
-            // if(active_status == choose_status) {
-            //   // timer();
-            //   //do nothing
-            // } else {
-            //   player_select('{{ $draftId }}', '{{ $random_player[0]->id }}', '{{ $leagueId }}')
-            // }
             console.log("timer ended vroo");
             autoPlayerPick('{{ $draftId }}', '{{ $leagueId }}', '{{ $loggedInUser }}');
-            // playPartial();
-            timer();
+            // timer();
         }
   });
     countdown.start();

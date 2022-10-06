@@ -3,40 +3,39 @@
   
  
   <div class="row">
-  @foreach($draft_list as $key => $orderDetails)
-	<div class="col-new">
-	<div class="container">
-	<p><?php $result = DB::table('teams')->where('id',$orderDetails->team_id)->get();
-    
-  echo  $result[0]->teamName;
-  //;exit()
-           ?></p>
-	<ul class="list-group">
-	<?php 	$draft_player = DB::table('draft_player_selection')->where('leagueId', $orderDetails->league_id)->where('userId',$orderDetails->user_id)->get();
- ?>
- @foreach($draft_player as $key => $orderDetails)
- <?php $result = DB::table('players')->where('id',$orderDetails->playerId)->get();
- $position = $result[0]->position;
- ?>
- <?php
- if($position ==  'Goalkeeper'){$background = 'red';$color = 'white';}
- if($position ==  'Forward'){$background = 'blue';$color = 'white';}
- if($position ==  'Midfielder'){$background = 'yellow';$color = 'black';}
- if($position ==  'Defender'){$background = 'green';$color = 'white';}
+    @foreach($draft_list as $key => $orderDetails)
+        <div class="col-new">
+            <div class="container">
+            <p>
+                <?php 
+                    $result = DB::table('teams')->where('id',$orderDetails->team_id)->get();
+                    echo  $result[0]->teamName;
+                ?>
+            </p>
+                    <ul class="list-group">
+                        <?php 	
+                            $draft_player = DB::table('draft_player_selection')->where('leagueId', $orderDetails->league_id)->where('userId',$orderDetails->user_id)->get();
+                        ?>
+                        @foreach($draft_player as $key => $orderDetails)
+                            <?php 
+                                $result = DB::table('players')->where('id',$orderDetails->playerId)->get();
+                                $position = $result[0]->position;
+                            ?>
+                            <?php
+                                if($position ==  'Goalkeeper'){$background = 'red';$color = 'white';}
+                                if($position ==  'Forward'){$background = 'blue';$color = 'white';}
+                                if($position ==  'Midfielder'){$background = 'yellow';$color = 'black';}
+                                if($position ==  'Defender'){$background = 'green';$color = 'white';}
+                            ?>
+                                <li style="background:<?php echo $background; ?>;color:<?php echo $color; ?>">
+                                    <?php echo  $result[0]->playerName; ?><br><?php echo  $result[0]->position; ?><br>            
+                                </li>
+                        @endforeach
+                    </ul>
 
- ?>
-	<li style="background:<?php echo $background; ?>;color:<?php echo $color; ?>"><?php echo  $result[0]->playerName; ?><br><?php echo  $result[0]->position; ?><br>
-                    
-        
-                    
-    </li>
-	 @endforeach
-	
-	
-	</ul>
-	</div>
-	</div>
-	 @endforeach	
+            </div>
+        </div>
+        @endforeach	
   </div>
   
   
@@ -89,15 +88,11 @@
                                 <td>{{ $rows->score }}</td>
                                 <td>{{ $rows->position }}</td>
                                 <td>{{ $rows->age }}</td>
-                                    @if($rows->active == 1)
-                                        <td><button type="button" class="btn btn-outline-primary" disabled>Picked</button></td>
-                                    @else
-                                        <td>
-                                            {{--<a href="{{ route('addPlayerToDraft', ['leagueId' => $league[0]->id, 'playerId'=>$rows->id, 'draftId' => $draftId ]) }}">
-                                            </a>--}}
-                                            <button type="button" class="btn btn-outline-primary" onclick="return player_select('{{ $draftId }}','{{ $rows->id }}', '{{ $league[0]->id }}')">Unpicked</button>
-                                        </td>
-                                    @endif    
+                                <td>
+                                    {{--<a href="{{ route('addPlayerToDraft', ['leagueId' => $league[0]->id, 'playerId'=>$rows->id, 'draftId' => $draftId ]) }}">
+                                    </a>--}}
+                                    <button type="button" class="btn btn-outline-primary" onclick="return player_select('{{ $draftId }}','{{ $rows->id }}', '{{ $league[0]->id }}')">Unpicked</button>
+                                </td>    
                             </tr>
                             <?php $i++; ?>
                         @endforeach

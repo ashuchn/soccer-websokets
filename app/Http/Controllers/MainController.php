@@ -377,11 +377,6 @@ class MainController extends Controller
 
         public function autoPlayerPick($leagueId,$draftId, $userId)
         {
-            // return response()->json([
-            //     "draftId" => $draftId,
-            //     "leagueId" => $leagueId,
-            //     "userId" => $userId
-            // ]);
             $chanceDecider = DB::table('draft_league')->where('user_id', $userId)->where('league_id', $leagueId)->get();
             // return $chanceDecider;
             $ch_status =  $chanceDecider[0]->choose_status;
