@@ -25,7 +25,7 @@
     <div class="row">
         <div class="col-lg-12">
             <h1>Draft room</h1>
-          <h1> Hi! 
+          <h1> Hi!
             <?php $result = DB::table('users')->where('id', session('userId'))->get();
             echo $result[0]->name;
            $draft_league_id =  $league[0]->id;
@@ -63,7 +63,7 @@
             <!-- <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModalshare">Share</button> -->
             {{--<a href="{{ route('start-draft', ['draftId' => $draftId , 'leagueId' => $league[0]->id ]) }}">
             </a>--}}
-            <button type="button" class="btn btn-outline-primary" onclick="return startDraft('{{$draftId}}', '{{ $league[0]->id }}')">Start</button>
+            <button type="button" class="btn btn-outline-primary" onclick="return startDraft('{{$draftId}}', '{{ $league[0]->id }}' , '{{ $teamId }}' )">Start</button>
             
         </div>
 
@@ -158,7 +158,7 @@
 <script>
     // var auto_refresh = setInterval(
         function playPartial(){
-            $('#main-draft-board').load('{{ url('play_partial') }}'+ '/'+ '{{ $leagueId }}' + '/' + '{{ $draftId }}' );           
+            $('#main-draft-board').load('{{ url('play_partial') }}'+ '/'+ '{{ $leagueId }}' + '/' + '{{ $draftId }}' + '/' +'{{ $teamId }}' );           
         }
         playPartial();
     //     , 1000);
@@ -193,30 +193,26 @@ $loggedInUser = session('userId');
 </script>
 
 <script>
-function player_select(draftId, playerId, leagueId) {
+function player_select(draftId, playerId, leagueId, teamId) {
     $.ajax({
-        url: "{{ url('addPlayerToDraft') }}" +"/league/" + leagueId + "/player/" + playerId + "/draftId/" + draftId ,
+        url: "{{ url('addPlayerToDraft') }}" +"/league/" + leagueId + "/player/" + playerId + "/draftId/" + draftId +"/team/"+ teamId,
         dataType: "json",
-        type: "GET",
-        
-        data: { leagueId : leagueId, playerId : playerId, draftId : draftId},
+        type: "GET",        
+        //data: { leagueId : leagueId, playerId : playerId, draftId : draftId, teamId : teamId},
         success: function (result) {
-          {{--getUserStatus('{{ session('userId') }}' , '{{ $leagueId}}'); --}}
           playPartial();
           timer();
         }
     }); 
   }
 
-  function startDraft(draftId, leagueId)
+  function startDraft(draftId, leagueId, teamId)
   {
     $.ajax({
-        url: "{{ url('start-draft/') }}" +"/league/" + leagueId + "/draft/" + draftId ,
+        url: "{{ url('start-draft/') }}" +"/league/" + leagueId + "/draft/" + draftId + '/team/' + teamId ,
         dataType: "json",
         type: "GET",
-        //data: { leagueId : leagueId, playerId : playerId, draftId : draftId},
         success: function (result) {
-           {{--getUserStatus('{{ session('userId') }}' , '{{ $leagueId}}');--}}
           playPartial();
           timer();
         }

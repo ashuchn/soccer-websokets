@@ -45,13 +45,13 @@ Route::group(['middleware' => ['checkuser']],function(){
 
     Route::get('draftDashboard/league/{leagueId}/team/{teamId}', [MainController::class, 'draft'])->name('draftDashboard');
 
-    Route::get('playDraft/league/{leagueId}/draft/{draftId}', [MainController::class, 'playDraft'])->name('playDraft');
+    Route::get('playDraft/league/{leagueId}/draft/{draftId}/team/{teamId}', [MainController::class, 'playDraft'])->name('playDraft');
 
-    Route::get('addPlayerToDraft/league/{leagueId}/player/{playerId}/draftId/{draftId}', [MainController::class, 'addPlayerToDraft'])->name('addPlayerToDraft');
+    Route::get('addPlayerToDraft/league/{leagueId}/player/{playerId}/draftId/{draftId}/team/{teamId}', [MainController::class, 'addPlayerToDraft'])->name('addPlayerToDraft');
 
-    Route::get('start-draft/league/{leagueId}/draft/{draftId}',[MainController::class, 'start_draft'])->name('start-draft');
+    Route::get('start-draft/league/{leagueId}/draft/{draftId}/team/{teamId}',[MainController::class, 'start_draft'])->name('start-draft');
     
-    Route::get('play_partial/{leagueId}/{draftId}', [MainController::class, 'play_partial'])->name('play_partial');
+    Route::get('play_partial/{leagueId}/{draftId}/{teamId}', [MainController::class, 'play_partial'])->name('play_partial');
 
     Route::get('timer-refresh/{leagueId}/{draftId}', [MainController::class, 'timer_refresh'])->name('timer-refresh');
     Route::get('timer-partial/{leagueId}', [MainController::class, 'timer_partial'])->name('timer-partial');
