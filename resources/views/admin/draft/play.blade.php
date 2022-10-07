@@ -267,6 +267,7 @@ function player_select(draftId, playerId, leagueId) {
 
 <script type="text/javascript">
 
+
       var pusher = new Pusher('2aa961ec7946f358e8e8', {
         cluster: 'ap2',
         encrypted: true
