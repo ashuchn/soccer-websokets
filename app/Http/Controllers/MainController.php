@@ -11,6 +11,7 @@ use App\Models\League;
 use App\Models\Team;
 use App\Models\Player;
 error_reporting(0);
+use App\Events\resetTimer;
 
 class MainController extends Controller
 {
@@ -446,11 +447,17 @@ class MainController extends Controller
 
         
         public function start_draft( $leagueId,$draftId, $teamId) 
+
         {
             // return $draftId;
 
-            event(new \App\Events\resetTimer());
+            // event(new \App\Events\resetTimer($leagueId));
+            // Announce that a new message has been posted
+            broadcast(new resetTimer($leagueId))->toOthers();
 
+            // resetTimer::dispatch($leagueId);
+    
+    
             DB::table('draft_league')->where('draft_id', $draftId)->update([
                 "choose_status" => 1
             ]);
@@ -465,7 +472,8 @@ class MainController extends Controller
 
         public function addPlayerToDraft($leagueId, $playerId, $draftId, $teamId)
         {
-            event(new \App\Events\resetTimer());
+            event(new \App\Events\resetTimer($leagueId));
+            // broadcast(new resetTimer($leagueId))->toOthers();
            session()->put('leagueId', $leagueId);
            session()->put('playerId', $playerId);
            session()->put('draftId', $draftId);

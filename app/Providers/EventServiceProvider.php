@@ -21,9 +21,9 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
-        resetTimer::class => [
-            listenResetTimer::class
-        ]
+        // resetTimer::class => [
+        //     listenResetTimer::class
+        // ]
 
     ];
 
