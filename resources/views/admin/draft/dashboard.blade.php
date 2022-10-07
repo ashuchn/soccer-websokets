@@ -73,7 +73,7 @@
         </div>
     </div>
     <div class="col-lg-12">
-        <button type="button" class="btn btn-primary"><a href="{{ route('playDraft', ['leagueId' => $league[0]->id, 'draftId' => $draftId[0]]) }}">Play in the League</a></button>
+        <button type="button" class="btn btn-primary"><a href="{{ route('playDraft', ['teamId' => $teamId ,'leagueId' => $league[0]->id, 'draftId' => $draftId[0]]) }}">Play in the League</a></button>
         <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal">Share to a friend</button>
     </div>
   </div>

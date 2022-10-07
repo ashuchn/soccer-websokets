@@ -1,6 +1,6 @@
 <section class="draft-board" id="draft-board">
 <div class="container">
-  
+  team id is {{ $teamId }}
  
   <div class="row">
     @foreach($draft_list as $key => $orderDetails)
@@ -9,7 +9,7 @@
             <p>
                 <?php 
                     $result = DB::table('teams')->where('id',$orderDetails->team_id)->get();
-                    echo  $result[0]->teamName;
+                    echo  $result[0]->teamName." ";
                 ?>
             </p>
                     <ul class="list-group">
@@ -56,7 +56,7 @@
       // // $choose_id =  $result2[0]->id;
       // echo $result2;
       ?>  
-<section class="all-player" style="display:<?php if($choose_status == $active_status ){echo 'none';}else{echo 'block';} ?>">
+<section class="all-player" style="display:<?php if($choose_status == $active_status ){ echo 'none'; }else{ echo 'block'; } ?>">
     <div class="container">
         <div class="row">
             
@@ -84,14 +84,14 @@
                         @foreach($players as $rows)
                             <tr>
                                 <td>{{ $i }}</td>
-                                <td>{{ $rows->playerName }}</td>
+                                <td>{{ $rows->playerName }}.' '.{{ $teamId }}</td>
                                 <td>{{ $rows->score }}</td>
                                 <td>{{ $rows->position }}</td>
                                 <td>{{ $rows->age }}</td>
                                 <td>
                                     {{--<a href="{{ route('addPlayerToDraft', ['leagueId' => $league[0]->id, 'playerId'=>$rows->id, 'draftId' => $draftId ]) }}">
                                     </a>--}}
-                                    <button type="button" class="btn btn-outline-primary" onclick="return player_select('{{ $draftId }}','{{ $rows->id }}', '{{ $league[0]->id }}')">Unpicked</button>
+                                    <button type="button" class="btn btn-outline-primary" onclick="return player_select('{{ $draftId }}','{{ $rows->id }}', '{{ $league[0]->id }}', '{{ $teamId }}')">Unpicked</button>
                                 </td>    
                             </tr>
                             <?php $i++; ?>

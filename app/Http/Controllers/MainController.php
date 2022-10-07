@@ -154,25 +154,9 @@ class MainController extends Controller
     }
 
 
-    
-    // public function playDraft($leagueId, $teamId)
-    // {
-    //     $league = League::where('id', $leagueId)->get();
-    //     $players = Player::all();
-    //     return view('admin.draft.play', ['players' => $players ,  'league' => $league, 'teamId' => $teamId ]);
-    // }
-
     /** draft 2nd page */
-    public function playDraft($leagueId, $draftId)
+    public function playDraft($leagueId, $draftId, $teamId)
         {
-            
-            // return $leagueId;
-            
-            // return [
-            //     "leagueid" => $leagueId,
-            //     "teamId" => $teamId,
-            //     "userId" => Auth::id()
-            // ];
 
                 $team = DB::table('teams')->where('leagueId', $leagueId)->where('userId', session('userId'))->get(); 
                 $teamCount = DB::table('teams')->where('leagueId', $leagueId)->where('userId', session('userId'))->count();
@@ -233,7 +217,8 @@ class MainController extends Controller
                     "league" => $league,
                     "userId" => session('userId'),
                     "draftId"=> $draftId,
-                    "leagueId" => $leagueId
+                    "leagueId" => $leagueId,
+                    "teamId" => $teamId
                 ]);
 
         }
@@ -292,7 +277,7 @@ class MainController extends Controller
             /** returns teams in a league */
             $teamCount = DB::table('draft_league')->where('league_id', $leagueId)->count(); 
             
-            event(new \App\Events\resetTimer());
+            //event(new \App\Events\resetTimer());
             return view('admin.draft.dashboard',[
                 // 'userId' => $userId,
                 'teamId' => $teamId,
@@ -342,33 +327,7 @@ class MainController extends Controller
             
         }
 
-        // public function autoPlayerPick($draftId, $leagueId, $userId)
-        // {
-        //     return [$leagueId,$draftId,$userId];
-        //     $chanceDecider = DB::table('draft_league')->where('user_id', $userId)->where('league_id', $leagueId)->get();
-        //     $ch_status =  $result_timer[0]->choose_status;
-        //     $ac_status =  $result_timer[0]->active_status;
-
-        //     if($ch_status != $ac_status ){
-        //         DB::table('draft_league')->where('id',$result1_id)->update(array('active_status'=>'1'));
-                    
-        //         DB::table('draft_player_selection')->insert([
-        //             "leagueId" => $leagueId,
-        //             //"teamId" => $teamId,
-        //             "teamId" => "1",
-        //             "playerId" => $playerId,
-        //             "userId" => session('userId')
-        //         ]);
-    
-        //         DB::table('players')->where('id', $playerId)->update([
-        //             "active" => 1
-        //         ]);
-                        
-        //         DB::table('draft_league')->where('league_id',$leagueId)->update(
-        //         array('choose_status'=>'0','active_status'=>'0'));
-        //     }
-
-        // }  
+         
 
         public function getRandomPlayer()
         {
@@ -487,7 +446,8 @@ class MainController extends Controller
         
 
         
-        public function start_draft($leagueId,$draftId) 
+        public function start_draft( $leagueId,$draftId, $teamId) 
+
         {
             // return $draftId;
 
@@ -504,12 +464,13 @@ class MainController extends Controller
 
             return redirect()->route('playDraft', [
                 "leagueId" =>$leagueId,
-                "draftId" => $draftId
+                "draftId" => $draftId,
+                "teamId" => $teamId
             ]);
 
         }
 
-        public function addPlayerToDraft($leagueId, $playerId, $draftId)
+        public function addPlayerToDraft($leagueId, $playerId, $draftId, $teamId)
         {
             event(new \App\Events\resetTimer($leagueId));
             // broadcast(new resetTimer($leagueId))->toOthers();
@@ -548,7 +509,7 @@ class MainController extends Controller
                     DB::table('draft_player_selection')->insert([
                         "leagueId" => $leagueId,
                         //"teamId" => $teamId,
-                        "teamId" => "1",
+                        "teamId" => $teamId,
                         "playerId" => $playerId,
                         "userId" => session('userId')
                     ]);
@@ -582,6 +543,7 @@ class MainController extends Controller
                     return redirect()->route('playDraft', [
                 "leagueId" =>$leagueId,
                 "draftId" => $draftId,
+                "teamId" => $teamId,
             ]);
                 
             }
@@ -609,8 +571,8 @@ class MainController extends Controller
            
                 DB::table('draft_player_selection')->insert([
                     "leagueId" => $leagueId,
-                    //"teamId" => $teamId,
-                    "teamId" => "1",
+                    "teamId" => $teamId,
+                    // "teamId" => "1",
                     "playerId" => $playerId,
                     "userId" => session('userId')
                    ]);
@@ -624,7 +586,8 @@ class MainController extends Controller
 				
             return redirect()->route('playDraft', [
                 "leagueId" =>$leagueId,
-                "draftId" => $draftId
+                "draftId" => $draftId,
+                "teamId" => $teamId,
             ]);
         }
         
@@ -646,7 +609,7 @@ class MainController extends Controller
 			
         }
 
-        public function play_partial($leagueId, $draftId)
+        public function play_partial($leagueId, $draftId, $teamId)
         {
 
                 $team = DB::table('teams')->where('leagueId', $leagueId)->where('userId', session('userId'))->get(); 
@@ -666,7 +629,8 @@ class MainController extends Controller
                     "league" => $league,
                     "userId" => session('userId'),
                     "draftId"=> $draftId,
-                    "leagueId"=> $leagueId
+                    "leagueId"=> $leagueId,
+                    "teamId" => $teamId,
                 ]);
 
         
